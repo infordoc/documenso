@@ -69,7 +69,7 @@ export default function SignIn({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="w-screen max-w-lg px-4">
-      <div className="z-10 rounded-xl border border-border bg-card p-6 dark:bg-background">
+      <div className="rounded-xl border border-border bg-card p-6">
         <h1 className="text-2xl font-semibold">
           <Trans>Sign in to your account</Trans>
         </h1>

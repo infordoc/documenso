@@ -33,9 +33,12 @@ import {
   TableRow,
 } from '@documenso/ui/primitives/table';
 
+import appStylesheet from '~/app.css?url';
 import { BrandingLogo } from '~/components/general/branding-logo';
 
 import type { Route } from './+types/certificate';
+
+export const links: Route.LinksFunction = () => [{ rel: 'stylesheet', href: appStylesheet }];
 
 const FRIENDLY_SIGNING_REASONS = {
   ['__OWNER__']: msg`I am the owner of this document`,
