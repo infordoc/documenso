@@ -58,8 +58,10 @@ export class MailChannelsTransport implements Transport<SentMessageInfo> {
       typeof mail.data.from === 'string'
         ? { email: mail.data.from }
         : {
-            email: mail.data.from?.address,
-            name: mail.data.from?.name,
+            email: Array.isArray(mail.data.from)
+              ? (mail.data.from[0]?.toString() ?? '')
+              : ((mail.data.from as Address)?.address ?? ''),
+            name: Array.isArray(mail.data.from) ? undefined : (mail.data.from as Address)?.name,
           };
 
     const requestHeaders: Record<string, string> = {
