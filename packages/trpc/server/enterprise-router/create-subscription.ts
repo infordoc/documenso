@@ -89,7 +89,7 @@ export const createSubscriptionRoute = authenticatedProcedure
           redirectUrl: returnUrl,
         };
       } catch (error) {
-        ctx.logger.error('Failed to update subscription', { error });
+        ctx.logger.error({ error }, 'Failed to update subscription');
 
         throw new AppError(AppErrorCode.UNKNOWN_ERROR, {
           message: 'Failed to update subscription plan',

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { useLingui } from '@lingui/react';
-import { Trans, t } from '@lingui/react/macro';
+import { Trans } from '@lingui/react/macro';
 import { Loader } from 'lucide-react';
 import { useSearchParams } from 'react-router';
 import type Stripe from 'stripe';
