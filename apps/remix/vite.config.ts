@@ -24,7 +24,8 @@ const cMapsDir = normalizePath(path.join(pdfjsDistPath, 'cmaps'));
 export default defineConfig({
   css: {
     postcss: {
-      plugins: [tailwindcss, autoprefixer],
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      plugins: [tailwindcss, autoprefixer()] as any,
     },
   },
   server: {
