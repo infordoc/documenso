@@ -1,4 +1,4 @@
-import { sha256 } from '@noble/hashes/sha256';
+import { sha256 } from '@noble/hashes/sha2.js';
 import { BackgroundJobStatus, Prisma } from '@prisma/client';
 import type { Context as HonoContext } from 'hono';
 
