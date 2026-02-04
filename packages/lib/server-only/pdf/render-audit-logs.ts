@@ -37,6 +37,8 @@ type GenerateAuditLogsOptions = {
   recipients: AuditLogRecipient[];
   auditLogs: TDocumentAuditLog[];
   hidePoweredBy: boolean;
+  brandingEnabled: boolean;
+  brandingLogo: string;
   pageWidth: number;
   pageHeight: number;
   i18n: I18n;
@@ -51,7 +53,7 @@ const parser = new UAParser();
 const textMutedForegroundLight = '#929DAE';
 const textForeground = '#000';
 const textMutedForeground = '#64748B';
-const textBase = 10;
+const _textBase = 10;
 const textSm = 9;
 const textXs = 8;
 const fontMedium = '500';
@@ -441,21 +443,51 @@ const renderRow = (options: RenderRowOptions) => {
   return rowGroup;
 };
 
-const renderBranding = () => {
+const renderBranding = async ({
+  brandingEnabled,
+  brandingLogo,
+}: {
+  brandingEnabled: boolean;
+  brandingLogo: string;
+}) => {
   const branding = new Konva.Group();
 
   const brandingHeight = 16;
 
-  const logoPath = path.join(process.cwd(), 'public/static/logo.png');
-  const logo = fs.readFileSync(logoPath);
+  let logoImage: HTMLImageElement;
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  const img = new SkiaImage(logo) as unknown as HTMLImageElement;
+  // Use organisation logo if branding is enabled and logo exists
+  if (brandingEnabled && brandingLogo) {
+    try {
+      // Fetch the logo from the branding URL
+      const response = await fetch(brandingLogo);
+      if (response.ok) {
+        const logoBuffer = Buffer.from(await response.arrayBuffer());
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        logoImage = new SkiaImage(logoBuffer) as unknown as HTMLImageElement;
+      } else {
+        throw new Error('Failed to fetch branding logo');
+      }
+    } catch (error) {
+      console.error('Error loading branding logo:', error);
+      // Fallback to default Documenso logo
+      const logoPath = path.join(process.cwd(), 'public/static/logo.png');
+      const logo = fs.readFileSync(logoPath);
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      logoImage = new SkiaImage(logo) as unknown as HTMLImageElement;
+    }
+  } else {
+    // Use default Documenso logo
+    const logoPath = path.join(process.cwd(), 'public/static/logo.png');
+    const logo = fs.readFileSync(logoPath);
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    logoImage = new SkiaImage(logo) as unknown as HTMLImageElement;
+  }
 
   const brandingImage = new Konva.Image({
-    image: img,
+    image: logoImage,
     height: brandingHeight,
-    width: brandingHeight * (img.width / img.height),
+    width: brandingHeight * (logoImage.width / logoImage.height),
   });
 
   branding.add(brandingImage);
@@ -574,6 +606,8 @@ export async function renderAuditLogs({
   pageHeight,
   i18n,
   hidePoweredBy,
+  brandingEnabled,
+  brandingLogo,
 }: GenerateAuditLogsOptions) {
   const fontPath = path.join(process.cwd(), 'public/fonts');
 
@@ -615,7 +649,10 @@ export async function renderAuditLogs({
     overviewCard,
   });
 
-  const brandingGroup = renderBranding();
+  const brandingGroup = await renderBranding({
+    brandingEnabled,
+    brandingLogo,
+  });
   const brandingRect = brandingGroup.getClientRect();
   const brandingTopPadding = 24;
 

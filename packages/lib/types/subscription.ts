@@ -1,7 +1,18 @@
-import type { SubscriptionClaim } from '@prisma/client';
 import { z } from 'zod';
 
 import { ZOrganisationNameSchema } from '@documenso/trpc/server/organisation-router/create-organisation.types';
+
+type SubscriptionClaim = {
+  id: string;
+  name: string;
+  teamCount: number;
+  memberCount: number;
+  envelopeItemCount: number;
+  locked: boolean;
+  flags: Record<string, unknown>;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 /**
  * README:

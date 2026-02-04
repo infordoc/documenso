@@ -2,10 +2,12 @@ import { z } from 'zod';
 
 import { ZOrganisationSchema } from '@documenso/lib/types/organisation';
 import { OrganisationMemberRole, TeamMemberRole } from '@documenso/prisma/generated/types';
+import OrganisationGlobalSettingsSchema from '@documenso/prisma/generated/zod/modelSchema/OrganisationGlobalSettingsSchema';
 import SubscriptionSchema from '@documenso/prisma/generated/zod/modelSchema/SubscriptionSchema';
 import TeamSchema from '@documenso/prisma/generated/zod/modelSchema/TeamSchema';
 
 export const ZGetOrganisationSessionResponseSchema = ZOrganisationSchema.extend({
+  organisationGlobalSettings: OrganisationGlobalSettingsSchema,
   teams: z.array(
     TeamSchema.pick({
       id: true,

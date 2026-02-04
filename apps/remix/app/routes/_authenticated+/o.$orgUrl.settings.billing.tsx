@@ -1,13 +1,16 @@
+import { useEffect } from 'react';
+
 import { useLingui } from '@lingui/react';
-import { Trans } from '@lingui/react/macro';
-import { SubscriptionStatus } from '@prisma/client';
+import { Trans, t } from '@lingui/react/macro';
 import { Loader } from 'lucide-react';
+import { useSearchParams } from 'react-router';
 import type Stripe from 'stripe';
 import { match } from 'ts-pattern';
 
 import { useCurrentOrganisation } from '@documenso/lib/client-only/providers/organisation';
 import { canExecuteOrganisationAction } from '@documenso/lib/utils/organisations';
 import { trpc } from '@documenso/trpc/react';
+import { useToast } from '@documenso/ui/primitives/use-toast';
 
 import { BillingPlans } from '~/components/general/billing-plans';
 import { OrganisationBillingPortalButton } from '~/components/general/organisations/organisation-billing-portal-button';
@@ -20,6 +23,8 @@ export function meta() {
 
 export default function TeamsSettingBillingPage() {
   const { _, i18n } = useLingui();
+  const { toast } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const organisation = useCurrentOrganisation();
 
@@ -28,10 +33,27 @@ export default function TeamsSettingBillingPage() {
       organisationId: organisation.id,
     });
 
+  // Mostrar notificação se o plano foi atualizado
+  useEffect(() => {
+    const updated = searchParams.get('updated');
+
+    if (updated === 'true') {
+      toast({
+        title: t`Plan updated successfully`,
+        description: t`Your subscription plan has been updated.`,
+        duration: 5000,
+      });
+
+      // Remover o parâmetro da URL
+      searchParams.delete('updated');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams, toast, t]);
+
   if (isLoadingSubscription || !subscriptionQuery) {
     return (
       <div className="flex items-center justify-center rounded-lg py-32">
-        <Loader className="text-muted-foreground h-6 w-6 animate-spin" />
+        <Loader className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -57,7 +79,7 @@ export default function TeamsSettingBillingPage() {
             <Trans>Billing</Trans>
           </h3>
 
-          <div className="text-muted-foreground mt-2 text-sm">
+          <div className="mt-2 text-sm text-muted-foreground">
             {!organisationSubscription && (
               <p>
                 <Trans>
@@ -135,9 +157,7 @@ export default function TeamsSettingBillingPage() {
 
       <hr className="my-4" />
 
-      {(!subscription ||
-        subscription.organisationSubscription.status === SubscriptionStatus.INACTIVE) &&
-        canManageBilling && <BillingPlans plans={plans} />}
+      {canManageBilling && <BillingPlans plans={plans} />}
 
       <section className="mt-6">
         <OrganisationBillingInvoicesTable

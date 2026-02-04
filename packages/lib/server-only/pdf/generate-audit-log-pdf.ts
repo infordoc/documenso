@@ -7,6 +7,7 @@ import { ZSupportedLanguageCodeSchema } from '../../constants/i18n';
 import { parseDocumentAuditLogData } from '../../utils/document-audit-logs';
 import { getTranslations } from '../../utils/i18n';
 import { getOrganisationClaimByTeamId } from '../organisation/get-organisation-claims';
+import { getTeamSettings } from '../team/get-team-settings';
 import type { GenerateCertificatePdfOptions } from './generate-certificate-pdf';
 import { renderAuditLogs } from './render-audit-logs';
 
@@ -20,10 +21,11 @@ export const generateAuditLogPdf = async (options: GenerateAuditLogPdfOptions) =
 
   const documentLanguage = ZSupportedLanguageCodeSchema.parse(language);
 
-  const [organisationClaim, auditLogs, messages] = await Promise.all([
+  const [organisationClaim, auditLogs, messages, teamSettings] = await Promise.all([
     getOrganisationClaimByTeamId({ teamId: envelope.teamId }),
     getAuditLogs(envelope.id),
     getTranslations(documentLanguage),
+    envelope.teamId ? getTeamSettings({ teamId: envelope.teamId }) : null,
   ]);
 
   i18n.loadAndActivate({
@@ -38,6 +40,8 @@ export const generateAuditLogPdf = async (options: GenerateAuditLogPdfOptions) =
     recipients,
     auditLogs,
     hidePoweredBy: organisationClaim.flags.hidePoweredBy ?? false,
+    brandingEnabled: teamSettings?.brandingEnabled ?? false,
+    brandingLogo: teamSettings?.brandingLogo ?? '',
     pageWidth,
     pageHeight,
     i18n,

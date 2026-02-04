@@ -170,6 +170,9 @@ const BillingDialog = ({
 
   const organisation = useCurrentOrganisation();
 
+  // Verificar se já existe uma subscription
+  const hasActiveSubscription = Boolean(organisation.subscription);
+
   const [subscriptionOption, setSubscriptionOption] = useState<'update' | 'create'>(
     organisation.type === 'PERSONAL' && claim === INTERNAL_CLAIM_ID.INDIVIDUAL
       ? 'update'
@@ -204,6 +207,24 @@ const BillingDialog = ({
         });
 
         redirectUrl = createSubscriptionResponse.redirectUrl;
+
+        // Se foi uma atualização direta (não checkout), mostrar mensagem e recarregar
+        if (redirectUrl.includes('updated=true')) {
+          toast({
+            title: t`Plan updated successfully`,
+            description: t`Your subscription plan has been updated.`,
+            duration: 5000,
+          });
+
+          setIsOpen(false);
+
+          // Recarregar a página após um breve delay
+          setTimeout(() => {
+            window.location.href = redirectUrl;
+          }, 1000);
+
+          return;
+        }
       } else {
         const createOrganisationResponse = await createOrganisation({
           name: form.getValues('name'),
@@ -232,18 +253,22 @@ const BillingDialog = ({
     <Dialog open={isOpen} onOpenChange={(value) => !isPending && setIsOpen(value)}>
       <DialogTrigger asChild>
         <Button>
-          <Trans>Subscribe</Trans>
+          {hasActiveSubscription ? <Trans>Change Plan</Trans> : <Trans>Subscribe</Trans>}
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            <Trans>Subscribe</Trans>
+            {hasActiveSubscription ? <Trans>Change Plan</Trans> : <Trans>Subscribe</Trans>}
           </DialogTitle>
 
           <DialogDescription>
-            <Trans>You are about to subscribe to the {planName}</Trans>
+            {hasActiveSubscription ? (
+              <Trans>You are about to change your plan to {planName}</Trans>
+            ) : (
+              <Trans>You are about to subscribe to the {planName}</Trans>
+            )}
           </DialogDescription>
         </DialogHeader>
 

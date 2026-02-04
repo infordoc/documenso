@@ -13,6 +13,7 @@ import { extractDocumentAuthMethods } from '../../utils/document-auth';
 import { getTranslations } from '../../utils/i18n';
 import { getDocumentCertificateAuditLogs } from '../document/get-document-certificate-audit-logs';
 import { getOrganisationClaimByTeamId } from '../organisation/get-organisation-claims';
+import { getTeamSettings } from '../team/get-team-settings';
 import { renderCertificate } from './render-certificate';
 
 export type GenerateCertificatePdfOptions = {
@@ -37,12 +38,13 @@ export const generateCertificatePdf = async (options: GenerateCertificatePdfOpti
 
   const documentLanguage = ZSupportedLanguageCodeSchema.parse(language);
 
-  const [organisationClaim, auditLogs, messages] = await Promise.all([
+  const [organisationClaim, auditLogs, messages, teamSettings] = await Promise.all([
     getOrganisationClaimByTeamId({ teamId: envelope.teamId }),
     getDocumentCertificateAuditLogs({
       envelopeId: envelope.id,
     }),
     getTranslations(documentLanguage),
+    envelope.teamId ? getTeamSettings({ teamId: envelope.teamId }) : null,
   ]);
 
   i18n.loadAndActivate({
@@ -137,6 +139,8 @@ export const generateCertificatePdf = async (options: GenerateCertificatePdfOpti
     envelopeOwner,
     qrToken: envelope.qrToken,
     hidePoweredBy: organisationClaim.flags.hidePoweredBy ?? false,
+    brandingEnabled: teamSettings?.brandingEnabled ?? false,
+    brandingLogo: teamSettings?.brandingLogo ?? '',
     pageWidth,
     pageHeight,
     i18n,

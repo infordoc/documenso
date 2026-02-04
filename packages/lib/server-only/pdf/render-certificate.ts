@@ -51,6 +51,8 @@ type GenerateCertificateOptions = {
   recipients: CertificateRecipient[];
   qrToken: string | null;
   hidePoweredBy: boolean;
+  brandingEnabled: boolean;
+  brandingLogo: string;
   i18n: I18n;
   envelopeOwner: {
     name: string;
@@ -75,12 +77,12 @@ const getDevice = (userAgent?: string | null): string => {
   return `${result.os.name} - ${result.browser.name} ${result.browser.version}`;
 };
 
-const textMutedForegroundLight = '#929DAE';
-const textForeground = '#000';
+const _textMutedForegroundLight = '#929DAE';
+const _textForeground = '#000';
 const textMutedForeground = '#64748B';
 const textBase = 10;
 const textSm = 9;
-const textXs = 8;
+const _textXs = 8;
 const fontMedium = '500';
 
 const columnWidthPercentages = [30, 30, 40];
@@ -541,7 +543,17 @@ const renderRow = (options: RenderRowOptions) => {
   return rowGroup;
 };
 
-const renderBranding = async ({ qrToken, i18n }: { qrToken: string | null; i18n: I18n }) => {
+const renderBranding = async ({
+  qrToken,
+  brandingEnabled,
+  brandingLogo,
+  i18n,
+}: {
+  qrToken: string | null;
+  brandingEnabled: boolean;
+  brandingLogo: string;
+  i18n: I18n;
+}) => {
   const branding = new Konva.Group();
 
   const brandingHeight = 12;
@@ -556,16 +568,40 @@ const renderBranding = async ({ qrToken, i18n }: { qrToken: string | null; i18n:
     height: brandingHeight,
   });
 
-  const logoPath = path.join(process.cwd(), 'public/static/logo.png');
-  const logo = fs.readFileSync(logoPath);
+  let logoImage: HTMLImageElement;
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  const img = new SkiaImage(logo) as unknown as HTMLImageElement;
+  // Use organisation logo if branding is enabled and logo exists
+  if (brandingEnabled && brandingLogo) {
+    try {
+      // Fetch the logo from the branding URL
+      const response = await fetch(brandingLogo);
+      if (response.ok) {
+        const logoBuffer = Buffer.from(await response.arrayBuffer());
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        logoImage = new SkiaImage(logoBuffer) as unknown as HTMLImageElement;
+      } else {
+        throw new Error('Failed to fetch branding logo');
+      }
+    } catch (error) {
+      console.error('Error loading branding logo:', error);
+      // Fallback to default Documenso logo
+      const logoPath = path.join(process.cwd(), 'public/static/logo.png');
+      const logo = fs.readFileSync(logoPath);
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      logoImage = new SkiaImage(logo) as unknown as HTMLImageElement;
+    }
+  } else {
+    // Use default Documenso logo
+    const logoPath = path.join(process.cwd(), 'public/static/logo.png');
+    const logo = fs.readFileSync(logoPath);
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    logoImage = new SkiaImage(logo) as unknown as HTMLImageElement;
+  }
 
   const documensoImage = new Konva.Image({
-    image: img,
+    image: logoImage,
     height: brandingHeight,
-    width: brandingHeight * (img.width / img.height),
+    width: brandingHeight * (logoImage.width / logoImage.height),
     x: text.width() + 16,
   });
 
@@ -695,6 +731,8 @@ export async function renderCertificate({
   recipients,
   qrToken,
   hidePoweredBy,
+  brandingEnabled,
+  brandingLogo,
   i18n,
   envelopeOwner,
   pageWidth,
@@ -735,7 +773,7 @@ export async function renderCertificate({
 
   const tables = renderTables({ groupedRows, columnWidths, i18n });
 
-  const brandingGroup = await renderBranding({ qrToken, i18n });
+  const brandingGroup = await renderBranding({ qrToken, brandingEnabled, brandingLogo, i18n });
   const brandingRect = brandingGroup.getClientRect();
   const brandingTopPadding = 24;
 
