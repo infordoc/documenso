@@ -21,17 +21,25 @@ export async function dynamicActivate(locale: string) {
 }
 
 const parseLanguageFromLocale = (locale: string): SupportedLanguageCodes | null => {
-  const [language, _country] = locale.split('-');
+  // Remove quality values (e.g., "pt-BR;q=0.9" -> "pt-BR")
+  const cleanLocale = locale.split(';')[0].trim();
 
-  const foundSupportedLanguage = APP_I18N_OPTIONS.supportedLangs.find(
-    (lang): lang is SupportedLanguageCodes => lang === language,
+  // First, try to find an exact match (e.g., "pt-BR")
+  const exactMatch = APP_I18N_OPTIONS.supportedLangs.find(
+    (lang): lang is SupportedLanguageCodes => lang === cleanLocale,
   );
 
-  if (!foundSupportedLanguage) {
-    return null;
+  if (exactMatch) {
+    return exactMatch;
   }
 
-  return foundSupportedLanguage;
+  // If no exact match, try to match by base language (e.g., "pt" from "pt-BR" or "pt-PT")
+  const [baseLanguage] = cleanLocale.split('-');
+  const baseLanguageMatch = APP_I18N_OPTIONS.supportedLangs.find(
+    (lang): lang is SupportedLanguageCodes => lang === baseLanguage,
+  );
+
+  return baseLanguageMatch || null;
 };
 
 /**
@@ -40,13 +48,24 @@ const parseLanguageFromLocale = (locale: string): SupportedLanguageCodes | null 
 export const extractLocaleDataFromHeaders = (
   headers: Headers,
 ): { lang: SupportedLanguageCodes | null; locales: string[] } => {
-  const headerLocales = (headers.get('accept-language') ?? '').split(',');
+  const headerLocales = (headers.get('accept-language') ?? '')
+    .split(',')
+    .map((locale) => locale.trim());
 
-  const language = parseLanguageFromLocale(headerLocales[0]);
+  // Try to find the first supported language from the list
+  for (const locale of headerLocales) {
+    const language = parseLanguageFromLocale(locale);
+    if (language) {
+      return {
+        lang: language,
+        locales: headerLocales,
+      };
+    }
+  }
 
   return {
-    lang: language,
-    locales: [headerLocales[0]],
+    lang: null,
+    locales: headerLocales,
   };
 };
 
@@ -60,14 +79,17 @@ type ExtractLocaleDataOptions = {
  * Will return the default fallback language if not found.
  */
 export const extractLocaleData = ({ headers }: ExtractLocaleDataOptions): I18nLocaleData => {
-  const headerLocales = (headers.get('accept-language') ?? '').split(',');
+  const headerLocales = (headers.get('accept-language') ?? '')
+    .split(',')
+    .map((locale) => locale.trim());
 
-  const unknownLanguages = headerLocales
+  // Parse all locales and filter out unsupported ones
+  const supportedLanguages = headerLocales
     .map((locale) => parseLanguageFromLocale(locale))
     .filter((value): value is SupportedLanguageCodes => value !== null);
 
-  // Filter out locales that are not valid.
-  const languages = (unknownLanguages ?? []).filter((language) => {
+  // Validate that the language code is a valid locale
+  const validLanguages = supportedLanguages.filter((language) => {
     try {
       new Intl.Locale(language);
       return true;
@@ -77,7 +99,7 @@ export const extractLocaleData = ({ headers }: ExtractLocaleDataOptions): I18nLo
   });
 
   return {
-    lang: languages[0] || APP_I18N_OPTIONS.sourceLang,
+    lang: validLanguages[0] || APP_I18N_OPTIONS.sourceLang,
     locales: headerLocales,
   };
 };

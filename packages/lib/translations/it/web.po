@@ -2353,6 +2353,11 @@ msgstr "Copiatori"
 msgid "Center"
 msgstr "Centro"
 
+#: apps/remix/app/components/general/billing-plans.tsx
+#: apps/remix/app/components/general/billing-plans.tsx
+msgid "Change Plan"
+msgstr ""
+
 #: apps/remix/app/components/general/envelope-editor/envelope-editor-fields-page-renderer.tsx
 msgid "Change Recipient"
 msgstr "Cambia destinatario"
@@ -6623,6 +6628,11 @@ msgstr "Organizzazioni"
 msgid "Organisations that the user is a member of."
 msgstr "Organizzazioni di cui l'utente è membro."
 
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+msgid "organisationSubscription.periodEnd"
+msgstr ""
+
 #: apps/remix/app/components/general/folder/folder-card.tsx
 msgid "Organise your documents"
 msgstr "Organizza i tuoi documenti"
@@ -6870,6 +6880,11 @@ msgstr "Posiziona e configura i campi del modulo nel documento"
 #: packages/ui/primitives/document-flow/field-items-advanced-settings/text-field.tsx
 msgid "Placeholder"
 msgstr "Segnaposto"
+
+#: apps/remix/app/components/general/billing-plans.tsx
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+msgid "Plan updated successfully"
+msgstr ""
 
 #. placeholder {0}: _(actionVerb).toLowerCase()
 #: packages/email/template-components/template-document-invite.tsx
@@ -11242,6 +11257,10 @@ msgstr "Sì"
 msgid "You"
 msgstr "Tu"
 
+#: apps/remix/app/components/general/billing-plans.tsx
+msgid "You are about to change your plan to {planName}"
+msgstr ""
+
 #: apps/remix/app/components/general/document-signing/document-signing-complete-dialog.tsx
 msgid "You are about to complete approving the following document"
 msgstr "Stai per completare l'approvazione del seguente documento"
@@ -11952,6 +11971,11 @@ msgstr "Il tuo codice di recupero è stato copiato negli appunti."
 #: apps/remix/app/components/forms/2fa/view-recovery-codes-dialog.tsx
 msgid "Your recovery codes are listed below. Please store them in a safe place."
 msgstr "I tuoi codici di recupero sono elencati di seguito. Si prega di conservarli in un luogo sicuro."
+
+#: apps/remix/app/components/general/billing-plans.tsx
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+msgid "Your subscription plan has been updated."
+msgstr ""
 
 #: apps/remix/app/components/forms/support-ticket-form.tsx
 msgid "Your support request has been submitted. We'll get back to you soon!"

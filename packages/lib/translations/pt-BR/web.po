@@ -2348,6 +2348,11 @@ msgstr "Destinatários em cópia"
 msgid "Center"
 msgstr "Centro"
 
+#: apps/remix/app/components/general/billing-plans.tsx
+#: apps/remix/app/components/general/billing-plans.tsx
+msgid "Change Plan"
+msgstr ""
+
 #: apps/remix/app/components/general/envelope-editor/envelope-editor-fields-page-renderer.tsx
 msgid "Change Recipient"
 msgstr "Alterar Destinatário"
@@ -6618,6 +6623,11 @@ msgstr "Organizações"
 msgid "Organisations that the user is a member of."
 msgstr "Organizações das quais o usuário é membro."
 
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+msgid "organisationSubscription.periodEnd"
+msgstr ""
+
 #: apps/remix/app/components/general/folder/folder-card.tsx
 msgid "Organise your documents"
 msgstr "Organize seus documentos"
@@ -6865,6 +6875,11 @@ msgstr "Posicione e configure os campos do formulário no documento"
 #: packages/ui/primitives/document-flow/field-items-advanced-settings/text-field.tsx
 msgid "Placeholder"
 msgstr "Espaço reservado"
+
+#: apps/remix/app/components/general/billing-plans.tsx
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+msgid "Plan updated successfully"
+msgstr ""
 
 #. placeholder {0}: _(actionVerb).toLowerCase()
 #: packages/email/template-components/template-document-invite.tsx
@@ -11237,6 +11252,10 @@ msgstr "Sim"
 msgid "You"
 msgstr "Você"
 
+#: apps/remix/app/components/general/billing-plans.tsx
+msgid "You are about to change your plan to {planName}"
+msgstr ""
+
 #: apps/remix/app/components/general/document-signing/document-signing-complete-dialog.tsx
 msgid "You are about to complete approving the following document"
 msgstr "Você está prestes a concluir a aprovação do seguinte documento"
@@ -11947,6 +11966,11 @@ msgstr "Seu código de recuperação foi copiado para sua área de transferênci
 #: apps/remix/app/components/forms/2fa/view-recovery-codes-dialog.tsx
 msgid "Your recovery codes are listed below. Please store them in a safe place."
 msgstr "Seus códigos de recuperação estão listados abaixo. Por favor, guarde-os em um local seguro."
+
+#: apps/remix/app/components/general/billing-plans.tsx
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+msgid "Your subscription plan has been updated."
+msgstr ""
 
 #: apps/remix/app/components/forms/support-ticket-form.tsx
 msgid "Your support request has been submitted. We'll get back to you soon!"

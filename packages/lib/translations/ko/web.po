@@ -2353,6 +2353,11 @@ msgstr "Cc 수신자"
 msgid "Center"
 msgstr "가운데"
 
+#: apps/remix/app/components/general/billing-plans.tsx
+#: apps/remix/app/components/general/billing-plans.tsx
+msgid "Change Plan"
+msgstr ""
+
 #: apps/remix/app/components/general/envelope-editor/envelope-editor-fields-page-renderer.tsx
 msgid "Change Recipient"
 msgstr "수신자 변경"
@@ -6623,6 +6628,11 @@ msgstr "조직"
 msgid "Organisations that the user is a member of."
 msgstr "사용자가 속한 조직입니다."
 
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+msgid "organisationSubscription.periodEnd"
+msgstr ""
+
 #: apps/remix/app/components/general/folder/folder-card.tsx
 msgid "Organise your documents"
 msgstr "문서를 정리하세요."
@@ -6870,6 +6880,11 @@ msgstr "문서에 양식 필드를 배치하고 구성하세요"
 #: packages/ui/primitives/document-flow/field-items-advanced-settings/text-field.tsx
 msgid "Placeholder"
 msgstr "플레이스홀더"
+
+#: apps/remix/app/components/general/billing-plans.tsx
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+msgid "Plan updated successfully"
+msgstr ""
 
 #. placeholder {0}: _(actionVerb).toLowerCase()
 #: packages/email/template-components/template-document-invite.tsx
@@ -11242,6 +11257,10 @@ msgstr "예"
 msgid "You"
 msgstr "나"
 
+#: apps/remix/app/components/general/billing-plans.tsx
+msgid "You are about to change your plan to {planName}"
+msgstr ""
+
 #: apps/remix/app/components/general/document-signing/document-signing-complete-dialog.tsx
 msgid "You are about to complete approving the following document"
 msgstr "다음 문서에 대한 승인을 완료하려고 합니다"
@@ -11952,6 +11971,11 @@ msgstr "복구 코드가 클립보드에 복사되었습니다."
 #: apps/remix/app/components/forms/2fa/view-recovery-codes-dialog.tsx
 msgid "Your recovery codes are listed below. Please store them in a safe place."
 msgstr "아래에 복구 코드가 표시됩니다. 안전한 곳에 보관해 주세요."
+
+#: apps/remix/app/components/general/billing-plans.tsx
+#: apps/remix/app/routes/_authenticated+/o.$orgUrl.settings.billing.tsx
+msgid "Your subscription plan has been updated."
+msgstr ""
 
 #: apps/remix/app/components/forms/support-ticket-form.tsx
 msgid "Your support request has been submitted. We'll get back to you soon!"
