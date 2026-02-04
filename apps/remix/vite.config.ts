@@ -63,7 +63,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     entries: ['./app/**/*', '../../packages/ui/**/*', '../../packages/lib/**/*'],
-    include: ['prop-types', 'file-selector', 'attr-accept'],
+    include: ['prop-types', 'file-selector', 'attr-accept', '@noble/ciphers'],
     exclude: [
       'node_modules',
       '@napi-rs/canvas',

@@ -1,6 +1,5 @@
-import { xchacha20poly1305 } from '@noble/ciphers/chacha';
-import { bytesToHex, hexToBytes, utf8ToBytes } from '@noble/ciphers/utils';
-import { managedNonce } from '@noble/ciphers/webcrypto';
+import { xchacha20poly1305 } from '@noble/ciphers/chacha.js';
+import { bytesToHex, hexToBytes, managedNonce, utf8ToBytes } from '@noble/ciphers/utils.js';
 import { sha256 } from '@noble/hashes/sha2';
 
 export type SymmetricEncryptOptions = {
