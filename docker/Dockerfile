@@ -19,7 +19,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm install -g "turbo@^1.9.3"
+RUN npm install -g "turbo@^2.8.3"
 
 # Outputs to the /out folder
 # source: https://turbo.build/repo/docs/reference/command-line-reference/prune#--docker
